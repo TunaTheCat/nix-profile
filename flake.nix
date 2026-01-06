@@ -20,17 +20,12 @@
       packages.${system}.default = pkgs.buildEnv {
         name = "home-profile";
         paths = [
-          # --- NIX PACKAGE MANAGER ---
-          # This ensures 'nix' updates when you update the flake
           pkgs.nix
 
-          # --- RUST TOOLCHAIN ---
-          # This gives you the latest stable rustc, cargo, etc.
           (pkgs.rust-bin.stable.latest.default.override {
             extensions = [ "rust-src" "rust-analyzer" ];
           })
 
-          # --- DEV TOOLS ---
           pkgs.btop
           pkgs.carapace
           pkgs.clang-tools
@@ -43,14 +38,11 @@
           pkgs.nixpkgs-fmt
           nil.packages.${system}.default
 
-          # --- NUSHELL PLUGINS ---
           pkgs.nushellPlugins.formats
           pkgs.nushellPlugins.gstat
           pkgs.nushellPlugins.polars
           pkgs.nushellPlugins.query
 
-          # --- FIX FOR BROKEN PACKAGES ---
-          # If dotenvx fails, we use 'pname' to find it safely or skip
           pkgs.dotenvx
         ];
       };
