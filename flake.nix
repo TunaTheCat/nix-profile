@@ -27,6 +27,7 @@
           })
 
           pkgs.btop
+          pkgs.ghc
           pkgs.carapace
           pkgs.clang-tools
           pkgs.devenv
