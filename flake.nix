@@ -26,6 +26,8 @@
             extensions = [ "rust-src" "rust-analyzer" ];
           })
 
+
+          pkgs.wl-clipboard
           pkgs.btop
           pkgs.ghc
           pkgs.carapace
