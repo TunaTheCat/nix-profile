@@ -4,15 +4,32 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:NixOs/nixpkgs/nixos-unstable";
-    rust-overlay.url = "github:oxalica/rust-overlay";
-    nil.url = "github:oxalica/nil";
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    claude-overlay = {
+      url = "github:sadjow/claude-code-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nil = {
+      url = "github:oxalica/nil";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    zen = {
+      url = "github:youwen5/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, rust-overlay, nil }:
+  outputs = { self, nixpkgs, nixpkgs-unstable, rust-overlay, claude-overlay, nil, zen }:
     let
       system = "x86_64-linux";
       # Apply the rust-overlay to nixpkgs
-      overlays = [ (import rust-overlay) ];
+      overlays = [
+        rust-overlay.overlays.default
+        claude-overlay.overlays.default
+      ];
       pkgs = import nixpkgs {
         inherit system overlays;
         config.allowUnfree = true;
@@ -32,12 +49,12 @@
             extensions = [ "rust-src" "rust-analyzer" ];
           })
 
-          unstable.claude-code
+          pkgs.claude-code
+          pkgs.nh
 
           pkgs.wl-clipboard
-          pkgs.apostrophe
+          pkgs.ncdu
           pkgs.neofetch
-          pkgs.frogmouth
           pkgs.glow
           pkgs.fastfetch
           pkgs.nodejs_24
@@ -60,6 +77,12 @@
           pkgs.nushellPlugins.query
 
           pkgs.dotenvx
+          pkgs.lazygit
+          pkgs.delta
+          pkgs.secretspec
+          pkgs.filezilla
+
+          zen.packages.${system}.default
         ];
       };
     };
